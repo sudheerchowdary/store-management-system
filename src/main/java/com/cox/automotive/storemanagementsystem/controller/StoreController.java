@@ -4,16 +4,13 @@ import com.cox.automotive.storemanagementsystem.beans.StoresBean;
 import com.cox.automotive.storemanagementsystem.entity.StoresEntity;
 import com.cox.automotive.storemanagementsystem.service.StoresService;
 import com.cox.automotive.storemanagementsystem.util.DataUtil;
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +38,23 @@ public class StoreController {
             log.error("Exception during getStores() !! Ex: {}", e.getLocalizedMessage());
         }
         return new ResponseEntity<>(storesEntities, HttpStatus.resolve(500));
+    }
+
+    @GetMapping("/get-store/{id}")
+    public ResponseEntity<StoresEntity> getStore(@PathVariable("id") final Integer id) {
+        if (id != null) {
+            try {
+                final Optional<StoresEntity> entity = this.storesService.getStoresById(id);
+                if (entity.isPresent())
+                    return new ResponseEntity(entity, HttpStatus.resolve(200));
+                return new ResponseEntity("Entry not found !!", HttpStatus.resolve(500));
+            } catch (Exception e) {
+                log.error("Exception during get-store for id. Ex: {}", e.getLocalizedMessage());
+                return new ResponseEntity("Problem while get-store for id. Ex: " + e.getLocalizedMessage(), HttpStatus.resolve(500));
+            }
+        } else
+            log.debug("Provided input null/empty ..!");
+        return new ResponseEntity("Provides id empty/null. Please verify the input provided!!.", HttpStatus.resolve(500));
     }
 
     @PostMapping("/add-store")
