@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stores</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script src="/jquery.min.js"></script>
+</head>
+</head>
+<body>
+<div class="my-store-container">
+    <style type="text/css">
+.my-store-container{
+    margin: 10px;
+    background: transparent;
+}
+.my-store-container h1{
+    color: white;
+    text-align: center;
+    background: rgba(0,0,0,1);
+    padding: 10px 0px;
+}
+
+#storesBody td {
+  vertical-align: middle;
+}
+
+
+#storesBody td button{
+  margin: 10px 0px;
+}
+</style>
+    <h1>Add Store</h1>
+    <div style="display:flex; justify-content:flex-end; width:100%; padding:0;">
+        <input class='btn btn-info btn-xs btn-add' type="button" onClick="location.href='../stores.html'" value="Back"/>
+    </div>
+    <form>
+        <div class="form-group">
+            <label>Type:</label>
+            <input type="text" name="type" class="form-control" id="type" required="">
+        </div>
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" name="name" class="form-control" id="name" required="">
+        </div>
+        <div class="form-group">
+            <label>Address:</label>
+            <input type="text" name="address" class="form-control" id="address" required="">
+        </div>
+        <div class="form-group">
+            <label>Address2:</label>
+            <input type="text" name="address2" class="form-control" id="address2">
+        </div>
+        <div class="form-group">
+            <label>City:</label>
+            <input type="text" name="city" class="form-control" id="city" required="">
+        </div>
+        <div class="form-group">
+            <label>State:</label>
+            <input type="text" name="state" class="form-control" id="state" required="">
+        </div>
+        <div class="form-group">
+            <label>Zip:</label>
+            <input type="text" name="zip" class="form-control" id="zip" required="">
+        </div>
+        <div class="form-group">
+            <label>Location:</label>
+            <input type="json" name="location" class="form-control" id="location" required="">
+        </div>
+        <div class="form-group">
+            <label>Hours:</label>
+            <input type="text" name="hours" class="form-control" id="hours" required="">
+        </div>
+        <div class="form-group">
+            <label>Services:</label>
+            <input type="text" name="services" class="form-control" id="services" required="">
+        </div>
+        <button type="submit" class="btn btn-success save-btn" id="btn_submit">Save</button>
+    </form>
+    <br/>
+</div>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+       $('#btn_submit').on("click",function (e) {
+           e.preventDefault();
+           var type, name, address, address2, city, state, zip, location, hours, services;
+           type = $('#type').val();
+           name = $('#name').val();
+           address = $('#address').val();
+           address2 = $('#address2').val();
+           city = $('#city').val();
+           state = $('#state').val();
+           zip = $('#zip').val();
+           location = $('#location').val().replace(/\\/g, '');
+           location = location ? JSON.parse(location) : location;
+           hours = $('#hours').val().replace(/\\/g, '');
+           services = $('#services').val().replace(/\\/g, '');
+           services = services ? services.split(",") : services;
+           if($.trim(type) === ""){
+               alert("type cannot be empty");
+           }
+           else {
+               var data = {};
+               data["type"] = type;
+               data["name"] = name;
+               data["address"] = address;
+               data["address2"] = address2;
+               data["city"] = city;
+               data["state"] = state;
+               data["zip"] = zip;
+               data["location"] = location;
+               data["hours"] = hours;
+               data["services"] = services;
+               $.ajax({
+                   type: "POST",
+                   contentType: "application/json",
+                   url: "/store/add-store",
+                   data: JSON.stringify(data),
+                   dataType: 'json',
+                   timeout: 6000
+               }).done(function(data, textStatus, jqXHR) {
+               }).fail(function(jqXHR, textStatus, errorThrown) {
+                      window.location = "stores.html";
+               })
+           }
+       });
+    });
+</script>
+</body>
+</html>
