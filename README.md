@@ -1,5 +1,5 @@
 # store-management-system
-Assessment for Cox Automotive
+
 
 The end user of the Store Management System should be able to: 
 
